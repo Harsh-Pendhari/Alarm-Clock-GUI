@@ -30,3 +30,9 @@ Alarm_Clock(GUI)/
 │-- icon.ico # App icon
 │-- README.md # Project documentation
 ```
+
+## ▶️ How to Run
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/Harsh-Pendhari/Alarm_Clock-GUI.git
+   cd Alarm_Clock-GUI
