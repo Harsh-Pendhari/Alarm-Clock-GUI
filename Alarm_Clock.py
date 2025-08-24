@@ -3,6 +3,7 @@ import datetime
 from tkinter import font, messagebox
 import threading
 import time
+import winsound
 
 root = tk.Tk()
 root.geometry("400x550")
@@ -26,6 +27,7 @@ frame.pack(pady=20)
 
 custom_font = font.Font(size=16)
 
+# Spinboxes for hour and minute
 hour_var = tk.StringVar(value="12")
 minute_var = tk.StringVar(value="00")
 ampm_var = tk.StringVar(value="AM")
@@ -45,6 +47,11 @@ ampm_spin.grid(row=0, column=2, padx=5)
 alarm_time = None
 alarm_running = False
 
+def play_alarm_sound():
+    for _ in range(10):
+        winsound.Beep(2000, 1000)
+        time.sleep(0.5)
+
 def set_alarm():
     global alarm_time, alarm_running
     hour = hour_var.get()
@@ -62,12 +69,12 @@ def check_alarm():
             if current_time == alarm_time:
                 alarm_running = False
                 messagebox.showwarning("Alarm!", f"Time's up! It's {alarm_time}")
+                play_alarm_sound()
         time.sleep(30)
 
 set_btn = tk.Button(root, text="Set Alarm", font=('Arial', 16, "bold"),
                     bg="#4CAF50", fg="white", cursor="hand2", command=set_alarm)
 set_btn.pack(pady=20)
-
 
 threading.Thread(target=check_alarm, daemon=True).start()
 
