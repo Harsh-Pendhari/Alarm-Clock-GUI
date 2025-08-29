@@ -3,15 +3,14 @@ from tkinter import font, messagebox
 import datetime
 import threading
 import time
-import winsound   
-
+import winsound
 
 root = tk.Tk()
 root.geometry("420x520")
 root.resizable(False, False)
 root.title("Alarm Clock")
-root.configure(bg="#222E36")
 root.iconbitmap(r'icon.ico')
+root.configure(bg="#222E36")
 
 def update_time():
     current_time = datetime.datetime.now().strftime('%I:%M:%S %p')
@@ -44,6 +43,7 @@ hour_spin.grid(row=0, column=0, padx=10)
 minute_spin.grid(row=0, column=1, padx=10)
 ampm_spin.grid(row=0, column=2, padx=10)
 
+# Label below spinboxes
 set_lbl_var = tk.StringVar(value="No Alarm Set")
 set_lbl = tk.Label(root, textvariable=set_lbl_var, font=("Arial", 14),
                    bg="#222E36", fg="lightgray")
@@ -51,12 +51,39 @@ set_lbl.pack(pady=15)
 
 alarm_time = None
 alarm_running = False
+alarm_thread = None
+snooze_minutes = 5
 
-def play_alarm_sound():
-    for _ in range(5):
+def alarm_sound_loop():
+    global alarm_running
+    while alarm_running:
         winsound.Beep(2000, 250)
         winsound.Beep(2000, 600)
-        time.sleep(0.5)
+        time.sleep(0.3)
+
+def start_alarm():
+    global alarm_running, alarm_thread
+    if not alarm_running:
+        alarm_running = True
+        set_lbl_var.set("⏰ Alarm Ringing!")
+        alarm_thread = threading.Thread(target=alarm_sound_loop, daemon=True)
+        alarm_thread.start()
+
+def stop_alarm():
+    global alarm_running, alarm_time
+    alarm_running = False
+    alarm_time = None
+    set_lbl_var.set("No Alarm Set")
+
+def snooze_alarm():
+    global alarm_running, alarm_time
+    if alarm_running:
+        alarm_running = False
+        set_lbl_var.set(f"Snoozed for {snooze_minutes} minutes")
+        # Calculate snooze time
+        now = datetime.datetime.now()
+        snooze_time = now + datetime.timedelta(minutes=snooze_minutes)
+        alarm_time = snooze_time.strftime('%I:%M %p')
 
 def set_alarm():
     global alarm_time, alarm_running
@@ -64,27 +91,18 @@ def set_alarm():
     minute = minute_var.get()
     ampm = ampm_var.get()
     alarm_time = f"{int(hour):02d}:{int(minute):02d} {ampm}"
-    alarm_running = True
+    alarm_running = False
     set_lbl_var.set(f"Alarm set for {alarm_time}")
     messagebox.showinfo("Alarm Set", f"Alarm set for {alarm_time}")
-
-def stop_alarm():
-    global alarm_running
-    alarm_running = False
-    set_lbl_var.set("No Alarm Set")
-    messagebox.showinfo("Alarm Stopped", "Alarm has been stopped.")
 
 def check_alarm():
     global alarm_running
     while True:
-        if alarm_running and alarm_time:
+        if not alarm_running and alarm_time:
             current_time = datetime.datetime.now().strftime('%I:%M %p')
             if current_time == alarm_time:
-                alarm_running = False
-                set_lbl_var.set("Alarm Ringing!")
-                messagebox.showwarning("Alarm!", f"⏰ Time's up! It's {alarm_time}")
-                play_alarm_sound()
-        time.sleep(20) 
+                start_alarm()
+        time.sleep(20)
 
 btn_frame = tk.Frame(root, bg="#222E36")
 btn_frame.pack(pady=20)
@@ -95,9 +113,13 @@ set_btn = tk.Button(btn_frame, text="Set Alarm", font=("Arial", 16, "bold"),
 stop_btn = tk.Button(btn_frame, text="Stop Alarm", font=("Arial", 16, "bold"),
                      bg="#F44336", fg="white", cursor="hand2", relief="flat",
                      width=12, command=stop_alarm)
+snooze_btn = tk.Button(root, text="Snooze", font=("Arial", 16, "bold"),
+                       bg="#FF9800", fg="white", cursor="hand2", relief="flat",
+                       width=26, command=snooze_alarm)
 
 set_btn.grid(row=0, column=0, padx=10)
 stop_btn.grid(row=0, column=1, padx=10)
+snooze_btn.pack(pady=10)
 
 update_time()
 threading.Thread(target=check_alarm, daemon=True).start()
