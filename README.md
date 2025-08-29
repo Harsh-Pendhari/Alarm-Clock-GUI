@@ -1,38 +1,76 @@
-# 🕒 Alarm Clock (GUI)
+# 🕰️ Alarm Clock (Python GUI)
 
-A simple **GUI-based Alarm Clock** built with **Python (Tkinter)**.  
-This project allows users to set an alarm at a specified time, and it will ring with a sound notification when the time is reached.
+A simple and stylish **Alarm Clock** built with **Python (Tkinter)**.  
+This app displays the current time, lets you set an alarm, snooze it, and stop it — with a continuous ringing alarm sound until dismissed.
 
 ---
 
 ## 🚀 Features
-- Set alarm for any hour and minute of the day.  
-- User-friendly **Tkinter GUI**.  
-- Displays current system time.  
-- Plays an alarm sound when the set time is reached.  
-- Option to stop the alarm once it rings.  
+
+- 📅 **Live Time Display** – Updates every second in 12-hour format with AM/PM.  
+- ⏰ **Set Alarm** – Choose **hour, minute, and AM/PM** using spinboxes.  
+- 🎵 **Continuous Ringing Alarm** – Beeps continuously until stopped or snoozed.  
+- 😴 **Snooze Option** – Snooze the alarm for 5 minutes with one click.  
+- 🛑 **Stop Alarm** – Immediately stops the ringing and clears the alarm.  
+- ✅ **Input Validation** – Ensures hours (1–12) and minutes (0–59) are valid, auto-corrects on focus-out.  
 
 ---
 
-## 🛠️ Technologies Used
-- **Python 3**  
-- **Tkinter** – for building the GUI  
-- **time** & **datetime** – for handling real-time operations  
-- **playsound / winsound** – for playing the alarm tone  
+## 🖥️ UI Preview
+- Top: Current Time Display  
+- Middle: Alarm Set Section (Hour, Minute, AM/PM spinboxes)  
+- Bottom: **Set Alarm**, **Stop Alarm**, and **Snooze** buttons  
 
 ---
 
-## 📂 Project Structure
-```
-Alarm_Clock(GUI)/
-│-- alarm_clock.py # Main application
-│-- alarm_sound.mp3 # Alarm sound file
-│-- icon.ico # App icon
-│-- README.md # Project documentation
+## 🛠️ Requirements
+
+- Python 3.x  
+- Works on **Windows** (uses `winsound` for alarm sound).  
+  > On Linux/Mac, you’ll need to replace the alarm sound function with another method (e.g., `playsound`).  
+
+Install required libraries (Tkinter is built-in with Python):  
+```bash
+pip install tk
 ```
 
 ## ▶️ How to Run
+
 1. Clone this repository:
-   ```bash
-   git clone https://github.com/Harsh-Pendhari/Alarm_Clock-GUI.git
-   cd Alarm_Clock-GUI
+```bash
+git clone https://github.com/yourusername/alarm-clock-gui.git
+```
+```bash
+cd alarm-clock-gui
+```
+2. Run the script:
+```bash
+python alarm_clock.py
+```
+
+## 📷 Example
+<img width="422" height="552" alt="image" src="https://github.com/user-attachments/assets/dea1e4f9-b709-45b6-b3ab-dbb1e43d8ac2" />
+
+## 📌 Notes
+
+- Default snooze is set to 5 minutes (can be changed in code).
+
+- Alarm runs on a background thread so the UI stays responsive.
+
+- Input fields are user-friendly:
+
+- Hours: 1–12
+
+- Minutes: 00–59 (auto zero-padded)
+
+- AM/PM: Read-only
+
+## 🤝 Contribution
+
+- Feel free to fork this project and add features like:
+
+- Custom snooze time
+
+- Different/ custom alarm sounds
+
+- Save multiple alarms
