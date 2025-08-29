@@ -31,11 +31,23 @@ hour_var = tk.StringVar(value="12")
 minute_var = tk.StringVar(value="00")
 ampm_var = tk.StringVar(value="AM")
 
+def validate_hour(P):
+    return P.isdigit() and (1 <= int(P) <= 12 or P == "")
+
+def validate_minute(P):
+    return P.isdigit() and (0 <= int(P) <= 59 or P == "")
+
+vcmd_hour = (root.register(validate_hour), "%P")
+vcmd_minute = (root.register(validate_minute), "%P")
+
 hour_spin = tk.Spinbox(frame, from_=1, to=12, wrap=True, textvariable=hour_var,
-                       font=custom_font, width=5, state="readonly", justify="center")
+                       font=custom_font, width=5, justify="center",
+                       validate="key", validatecommand=vcmd_hour)
+
 minute_spin = tk.Spinbox(frame, from_=0, to=59, wrap=True, format="%02.0f",
                          textvariable=minute_var, font=custom_font, width=5,
-                         state="readonly", justify="center")
+                         justify="center", validate="key", validatecommand=vcmd_minute)
+
 ampm_spin = tk.Spinbox(frame, values=("AM", "PM"), textvariable=ampm_var,
                        font=custom_font, width=5, state="readonly", justify="center")
 
@@ -43,7 +55,6 @@ hour_spin.grid(row=0, column=0, padx=10)
 minute_spin.grid(row=0, column=1, padx=10)
 ampm_spin.grid(row=0, column=2, padx=10)
 
-# Label below spinboxes
 set_lbl_var = tk.StringVar(value="No Alarm Set")
 set_lbl = tk.Label(root, textvariable=set_lbl_var, font=("Arial", 14),
                    bg="#222E36", fg="lightgray")
@@ -57,8 +68,7 @@ snooze_minutes = 5
 def alarm_sound_loop():
     global alarm_running
     while alarm_running:
-        winsound.Beep(2000, 250)
-        winsound.Beep(2000, 600)
+        winsound.Beep(2000, 700)
         time.sleep(0.3)
 
 def start_alarm():
@@ -80,7 +90,6 @@ def snooze_alarm():
     if alarm_running:
         alarm_running = False
         set_lbl_var.set(f"Snoozed for {snooze_minutes} minutes")
-        # Calculate snooze time
         now = datetime.datetime.now()
         snooze_time = now + datetime.timedelta(minutes=snooze_minutes)
         alarm_time = snooze_time.strftime('%I:%M %p')
@@ -90,6 +99,11 @@ def set_alarm():
     hour = hour_var.get()
     minute = minute_var.get()
     ampm = ampm_var.get()
+
+    if not hour.isdigit() or not minute.isdigit():
+        messagebox.showerror("Invalid Input", "Hour and Minute must be numbers")
+        return
+
     alarm_time = f"{int(hour):02d}:{int(minute):02d} {ampm}"
     alarm_running = False
     set_lbl_var.set(f"Alarm set for {alarm_time}")
