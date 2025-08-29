@@ -54,7 +54,8 @@ alarm_running = False
 
 def play_alarm_sound():
     for _ in range(5):
-        winsound.Beep(2000, 1000)
+        winsound.Beep(2000, 250)
+        winsound.Beep(2000, 600)
         time.sleep(0.5)
 
 def set_alarm():
