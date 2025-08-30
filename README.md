@@ -38,14 +38,14 @@ pip install tk
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/alarm-clock-gui.git
+git clone https://github.com/Harsh-Pendhari/Alarm-Clock-GUI.git
 ```
 ```bash
-cd alarm-clock-gui
+cd Alarm-Clock-GUI
 ```
 2. Run the script:
 ```bash
-python alarm_clock.py
+python Alarm_Clock.py
 ```
 
 ## 📷 Example
